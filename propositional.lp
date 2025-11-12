@@ -43,4 +43,14 @@ classifies_neg(ID,X):-for(ID,and,D), classifies_neg(D,X),ID<=size,D<=size.
 classifies_neg(ID,X):-for(ID,and,D), classifies_neg(D+1,X),ID<=size,D<=size.
 %we optimize the number of correct answers
 #maximize{1,X:classifies_pos(1,X),example(X,pos);1,X:classifies_neg(1,X),example(X,neg)}.
+
+%count for attributes
+count_a(1..ATT_N) :- ATT_N = #count { 0,A : attribute(A) }.
+
+1 {att_n(N,A) : count_a(N) } 1 :- attribute(A).
+
+:- att_n(N, A0), att_n(N, A1), A0 < A1.
+:- att_n(N0, A0), att_n(N1, A1), N0 < N1, A0 > A1.
+:- attribute(A), not att_n(_, A).
+
 #show for/3.
