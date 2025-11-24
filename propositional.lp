@@ -49,6 +49,11 @@ count_a(1..ATT_N) :- ATT_N = #count { 0,A : attribute(A) }.
 
 1 {att_n(N,A) : count_a(N) } 1 :- attribute(A).
 
+failed(ID) :- example(ID,pos), not classifies_pos(1,ID).
+failed(ID) :- example(ID,neg), not classifies_neg(1,ID).
+
+% failed(ID) :- if ID not satisfied.
+
 :- att_n(N, A0), att_n(N, A1), A0 < A1.
 :- att_n(N0, A0), att_n(N1, A1), N0 < N1, A0 > A1.
 :- attribute(A), not att_n(_, A).

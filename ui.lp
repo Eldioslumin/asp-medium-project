@@ -8,7 +8,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%
 elem(w, window, root).
     attr(w, child_layout, flex).
-    attr(w, flex_direction, column).
+    attr(w, flex_direction, row).
 
 %%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -19,8 +19,8 @@ elem(w, window, root).
 elem(p,container, w).
     attr(p, child_layout,grid).
     attr(p, flex_direction, row).
-    attr(p, display, block).
-    attr(p, margin, auto).
+%    attr(p, display, block).
+%    attr(p, margin, auto).
     attr(p, class, ("bg-light")).
 
 %row for attribute names that are also checkboxes for including/excluding attributes
@@ -31,8 +31,6 @@ elem(attr_name(A), checkbox, p):- attribute(A).
     %styling
     attr(attr_name(A), class, ("fw-bold")) :- attribute(A).
     attr(attr_name(A), class, ("text-center")) :- attribute(A).
-    
-    
 
 %column for the examples
 elem(ex(E), label, p):- example(E,_).
@@ -61,16 +59,20 @@ elem(cell(E,A), label, p) :- example(E,_), attribute(A).
 
 %column to show whether an example is correctly classified
 elem(ex(E, result), label, p) :- example(E,_).
-    attr(ex(E, result), label, "Result") :- example(E,_).
+    elem(result_label, label, p).
+    attr(result_label, label, "Result").
+    attr(result_label, grid_column, ATT_N + 3) :- example(E,_), ATT_N = #count { 0,A : attribute(A) }.
+    attr(result_label, grid_row, 0).
+
     attr(ex(E, result), grid_column, ATT_N + 3) :- example(E,_), ATT_N = #count { 0,A : attribute(A) }.
-    attr(ex(E, result), grid_row, 0) :- example(E,_).
+    attr(ex(E, result), grid_row, E+1) :- example(E,_).
     attr(ex(E, result), class, ("border-start","fw-bold")) :- example(E,_).
     attr(ex(E, result), class, ("px-1")) :- example(E,_).
     %for each example, show whether it is classified correctly or not
-    attr(ex(E, result), label, "Correct") :- classified(E, correct), example(E,_).
-    attr(ex(E, result), label, "Incorrect") :- classified(E, incorrect), example(E,_).
-    attr(ex(E, result), class, ("bg-opacity-75")) :- classified(E, correct), example(E,_).
-    attr(ex(E, result), class, ("bg-danger")) :- classified(E, incorrect), example(E,_).    
+    attr(ex(E, result), label, "Correct") :- not failed(E), example(E,_).
+    attr(ex(E, result), label, "Incorrect") :- failed(E), example(E,_).
+%    attr(ex(E, result), class, ("bg-opacity-75")) :- classified(E, correct), example(E,_).
+%    attr(ex(E, result), class, ("bg-danger")) :- classified(E, incorrect), example(E,_).    
 
 % elem(ex(E,R), label, p) :- result(E,R).
 %     attr(ex(E,R), label, "Result") :- result(E,R).
@@ -80,7 +82,7 @@ elem(ex(E, result), label, p) :- example(E,_).
 %     attr(ex(E,R), label, "Incorrect") :- result(E,R), not true(1,E).
 
 %container for the graph
-elem(graph_container, container, w).
-    elem(graph, canvas, graph_container).
-        attr(graph, image_type, clingraph).
-        
+% elem(graph_container, container, w).
+%     elem(graph, canvas, graph_container).
+%         attr(graph, image_type, clingraph).
+
