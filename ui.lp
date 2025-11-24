@@ -32,6 +32,8 @@ elem(attr_name(A), checkbox, p):- attribute(A).
     attr(attr_name(A), class, ("fw-bold")) :- attribute(A).
     attr(attr_name(A), class, ("text-center")) :- attribute(A).
 
+ 
+
 %column for the examples
 elem(ex(E), label, p):- example(E,_).
     attr(ex(E), grid_row, E+1) :- example(E,_).
@@ -82,7 +84,58 @@ elem(ex(E, result), label, p) :- example(E,_).
 %     attr(ex(E,R), label, "Incorrect") :- result(E,R), not true(1,E).
 
 %container for the graph
-% elem(graph_container, container, w).
-%     elem(graph, canvas, graph_container).
-%         attr(graph, image_type, clingraph).
+elem(graph_container, container, w).
+    elem(graph, canvas, graph_container).
+        attr(graph, image_type, clingraph).
+
+
+%%%%%%%%%%%%
+% Menu bar %
+%%%%%%%%%%%%
+
+elem(menu_bar, menu_bar, w).
+attr(menu_bar, title, "Propositional").
+attr(menu_bar, icon, "fa-table-cells").
+
+    %%%
+    % "Clear Assumptions" Button 
+    %%%
+    elem(menu_bar_clear, button, menu_bar).
+    attr(menu_bar_clear, label, "Clear").
+    attr(menu_bar_clear, icon, "fa-trash").
+    attr(menu_bar_clear, class, ("btn-outline-danger";"border-0")).
+    when(menu_bar_clear, click, callback, clear_assumptions).
+
+    %%%
+    % Save Button 
+    %%%
+    elem(menu_bar_download, button, menu_bar).
+    attr(menu_bar_download, label, "Save").
+    attr(menu_bar_download, icon, "fa-save").
+    % The first elements define what will be saved (in this case, only the for atoms of our formula), 
+    % and the second element define the file it will be downloaded to.s
+    % Any way to make this dynamic? As in, the user can chose the name of the file or which atoms to download?
+    when(menu_bar_download, click, call, download("#show for/3.","instance_solution.lp")).
+
+    %%%
+    % Select solution buttons. Works automatically.
+    %%%
+    %elem(menu_bar_select, button, menu_bar).
+    %attr(menu_bar_select, label, "Select solution").
+    %attr(menu_bar_select, icon, "fa-hand-pointer").
+    %when(menu_bar_select, click, callback, select).
+
+    elem(menu_bar_next, button, menu_bar).
+    attr(menu_bar_next, label, "Next").
+    attr(menu_bar_next, icon, "fa-forward-step").
+    when(menu_bar_next, click, callback, next_solution).
+
+    elem(menu_bar_next_opt, button, menu_bar).
+    attr(menu_bar_next_opt, label, "Next Optimal").
+    attr(menu_bar_next_opt, icon, "fa-forward-step").
+    when(menu_bar_next_opt, click, callback, next_solution(optN)).
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
 
