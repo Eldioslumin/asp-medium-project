@@ -1,9 +1,11 @@
 example_n(X):-example(X,_).
 operator(neg;and;or).
 double_operator(and;or).
+
 %generate rules for operators and atoms
 {for(ID,T,D)}:-ID=1..size,D=1..size,D>ID,operator(T). % generate operators
 {for(ID,atom,C)}:-ID=1..size,attribute(C). % generate atoms
+
 %
 %constraints
 %
@@ -18,6 +20,7 @@ double_operator(and;or).
 :-for(ID,T,D),double_operator(T),for(D,and,A1),for(D+1,or,A2). % it cant be the case that double operators refer to different operators
 :-for(ID1,T1,D1),for(ID2,T2,D2),ID1<ID2,operator(T1),operator(T2),ID1!=ID2,D1>=D2. %it cant be the case that operators are not ordered by depth
 :-for(ID1,T1,D1), for(ID2,T2,D2), ID1 < ID2, double_operator(T1),operator(T2), D1+1>=D2. % it cant be the case that double operators are not ordered by depth
+
 %compute size of atoms as 1
 formula_size(ID,1):-for(ID,atom,_).%size of atoms is 1
 %negation of atoms as size formula they refers to +1
@@ -25,11 +28,31 @@ formula_size(ID,Y):-for(ID,neg,D),formula_size(D,X),Y=X+1,X<size. %size of neg a
 %size of or and and as size of formula they refers +1
 formula_size(ID,T):-for(ID,or,D),formula_size(D,X1),formula_size(D+1,X2),T=X1+X2+1,X1<size,X2<size. %size of or as size of formula it refers + size of formula it refers +1
 formula_size(ID,T):-for(ID,and,D),formula_size(D,X1),formula_size(D+1,X2),T=X1+X2+1,X1<size,X2<size. %size of and as size of formula it refers + size of formula it refers +1
+
+%%%%%%%%%%%%%%%%%%
+% Updated section%
+%%%%%%%%%%%%%%%%%%
+
 %check that the size of the formula is the possible max
-
-
 :-#max{X:formula_size(1,X)}!=size. % formula size must be the max
 
+max_size(M):- M = #max{X:maximum_size(X)}.
+min_size(M):- M = #max{X:minimum_size(X)}.
+
+% Confusion matrix of corre
+correct(X):- example(X,pos),classifies_pos(1,X).
+correct(X):- example(X,neg),classifies_neg(1,X).
+error(X):- example(X, pos), not correct(X).
+error(X):- example(X, neg), not correct(X).
+#maximize{1, X: correct(X)}.
+
+
+total_errors(E):- E = #count{X:error(X)}.
+
+:- total_errors(X), max_errors(Y), X>Y.
+:- total_errors(X), min_errors(Y), X<Y.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %we store how atoms classify examples
 classifies_pos(ID,X):-for(ID,atom,C),has(X,C),ID<=size.
@@ -45,9 +68,9 @@ classifies_neg(ID,X):-for(ID,or,D), classifies_neg(D,X), classifies_neg(D+1,X),I
 classifies_pos(ID,X):-for(ID,and,D), classifies_pos(D,X),classifies_pos(D+1,X),ID<=size,D<=size.
 classifies_neg(ID,X):-for(ID,and,D), classifies_neg(D,X),ID<=size,D<=size.
 classifies_neg(ID,X):-for(ID,and,D), classifies_neg(D+1,X),ID<=size,D<=size.
+
+%Modified so it works for ui.lp
 %we optimize the number of correct answers
-
-
 #maximize{1,X:classifies_pos(1,X),example(X,pos);1,X:classifies_neg(1,X),example(X,neg)}.
 
 %count for attributes
@@ -59,4 +82,7 @@ count_a(1..ATT_N) :- ATT_N = #count { 0,A : attribute(A) }.
 :- att_n(N0, A0), att_n(N1, A1), N0 < N1, A0 > A1.
 :- attribute(A), not att_n(_, A).
 
+
 #show for/3.
+
+

@@ -101,10 +101,10 @@ attr(menu_bar, icon, "fa-table-cells").
     % "Clear Assumptions" Button 
     %%%
     elem(menu_bar_clear, button, menu_bar).
-    attr(menu_bar_clear, label, "Clear").
+    attr(menu_bar_clear, label, "Restart").
     attr(menu_bar_clear, icon, "fa-trash").
     attr(menu_bar_clear, class, ("btn-outline-danger";"border-0")).
-    when(menu_bar_clear, click, callback, clear_assumptions).
+    when(menu_bar_clear, click, callback, restart).
 
     %%%
     % Save Button 
@@ -138,4 +138,87 @@ attr(menu_bar, icon, "fa-table-cells").
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Create a button for setting the max/min error of the formula.
+    elem(menu_bar_size, button, menu_bar).
+    attr(menu_bar_size, label, "Set Size").
+    when(menu_bar_size, click, update, (set_error,visibility,visible)).
+
+% When the button is clicked, show a modal where the user can set a new size constant.
+    
+    elem(set_size,modal,w).
+    attr(set_size,title,"Size").
+
+    elem(set_size_container, container, set_size).
+    attr(set_size_container, flex_direction, "column").
+    attr(set_size_container, class, "align-items-end").
+
+    % Add button to apply new size
+    elem(set_size_button, button, set_size_container).
+    attr(set_size_button, label, "Apply").
+    attr(set_size_button, class, "m-1").
+    attr(set_size_button, class, "btn-success").
+
+
+    when(set_size_button, click, call, 
+            (
+            add_atom(max_size(_context_value(new_max_size))),
+            add_atom(min_size(_context_value(new_min_size))))
+        ).
+
+    % You get two textfields so the user can set a new number.
+    elem(max_size, textfield, set_size_container).
+    attr(max_size, placeholder, "Set max size").
+    attr(max_size, width, 450).
+    when(max_size, input, context, (new_max_size, _value)).
+
+    elem(min_size, textfield, set_size_container).
+    attr(min_size, placeholder, "Set min size").
+    attr(min_size, width, 450).
+    when(min_size, input, context, (new_min_size, _value)).
+
+
+   
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Create a button for setting the max/min error of the formula.
+    elem(menu_bar_error, button, menu_bar).
+    attr(menu_bar_error, label, "Set Error").
+    when(menu_bar_error, click, update, (set_error,visibility,visible)).
+
+% When the button is clicked, show a modal where the user can set a new size constant.
+    
+    elem(set_error,modal,w).
+    attr(set_error,title,"Error").
+
+    elem(set_error_container, container, set_error).
+    attr(set_error_container, flex_direction, "column").
+    attr(set_error_container, class, "align-items-end").
+
+    % Add button to apply new size
+    elem(set_error_button, button, set_error_container).
+    attr(set_error_button, label, "Apply").
+    attr(set_error_button, class, "m-1").
+    attr(set_error_button, class, "btn-success").
+
+
+    when(set_error_button, click, call, 
+            (
+            add_atom(max_error(_context_value(new_max_error))),
+            add_atom(min_error(_context_value(new_min_error))))
+        ).
+
+
+    % You get two textfields so the user can set a new number.
+    elem(max_error_text, textfield, set_error_container).
+    attr(max_error_text, placeholder, "Set max error").
+    attr(max_error_text, width, 450).
+    when(max_error_text, input, context, (new_max_error, _value)).
+
+    elem(min_error_text, textfield, set_error_container).
+    attr(min_error_text, placeholder, "Set min error").
+    attr(min_error_text, width, 450).
+    when(min_error_text, input, context, (new_min_error, _value)).
+
+
 
