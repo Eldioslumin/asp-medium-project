@@ -63,10 +63,9 @@ failed(ID) :- example(ID,neg), not classifies_neg(1,ID).
 :- att_n(N, A0), att_n(N, A1), A0 < A1.
 :- att_n(N0, A0), att_n(N1, A1), N0 < N1, A0 > A1.
 :- attribute(A), not att_n(_, A).
-:- include(A), not attribute(A).
-:- exclude(A), not attribute(A).
-:- include(A), not for(_, atom, A).
-:- exclude(A), for(_, atom, A).
-:- required(E), not classified(E, correct).
+
+:- include(A), not for(_, atom, A). %it cant be the case that included attributes are not used in the formula
+:- exclude(A), for(_, atom, A). %it cant be the case that excluded attributes are used in the formula
+:- ness(E), not classified(E, correct). %it cant be the case that necessary examples are not classified correctly
 
 % #show for/3.

@@ -57,7 +57,7 @@ elem(exclude_a(A), checkbox, p):- attribute(A).
     attr(exclude_a(A), grid_row, 3) :- attribute(A).
     attr(exclude_a(A), grid_column, N+2) :- att_n(N,A).
     attr(exclude_a(A), checked, true) :- exclude(A).
-%actions
+%actions 
 when(force_a(A), click, call, add_atom(include(A))) :- attribute(A), not include(A).
 when(force_a(A), click, call, remove_atom(exclude(A))) :- exclude(A).
 when(force_a(A), click, call, remove_atom(include(A))) :- attribute(A), include(A).
@@ -148,13 +148,6 @@ attr(menu_bar, icon, "fa-table-cells").
     % Any way to make this dynamic? As in, the user can chose the name of the file or which atoms to download?
     when(menu_bar_download, click, call, download("#show for/3.","instance_solution.lp")).
 
-    %%%
-    % Select solution buttons. Works automatically.
-    %%%
-    %elem(menu_bar_select, button, menu_bar).
-    %attr(menu_bar_select, label, "Select solution").
-    %attr(menu_bar_select, icon, "fa-hand-pointer").
-    %when(menu_bar_select, click, callback, select).
 
     elem(menu_bar_next, button, menu_bar).
     attr(menu_bar_next, label, "Next").
